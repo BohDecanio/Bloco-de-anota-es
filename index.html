@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloco de Notas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0ee96;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        #cabecalho {
+            font-style: italic;
+            color: orangered;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #card_cria_nota {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+            border: 2px solid orangered;
+            border-radius: 8px;
+            background-color: antiquewhite;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        #input_nota {
+            width: calc(100% - 24px); 
+            min-height: 60px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        #btn_cria_nota {
+            padding: 10px 15px;
+            background-color: orangered;
+            color: antiquewhite;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #btn_cria_nota:hover {
+            background-color: darkorange;
+        }
+
+        .nota-item{
+            list-style: none;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nota-numero{
+            font-weight: bold;
+            margin-right: 10px;
+
+        }
+
+        .nota-texto{
+            flex-grow: 1;
+        }
+
+        .btn_excluir{
+            padding: 5px 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn_excluir:hover{
+            background-color: darkred;
+        }
+
+        #lista_notas{
+            padding: 0;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f0ee96;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header id="cabecalho">
+        <h1>Bloco de notas</h1>
+    </header>
+
+    <main>
+        <div id="card_cria_nota">
+            <input type="text" id="input_nota" placeholder="Digite sua anotação...">
+            <button id="btn_adicionar">Adicionar Nota</button>
+            
+        </div>
+        <ul id="lista_notas" class="class_nota"></ul>
+    </main>
+
+    <footer>
+        <p id="txt_footer">Direitos reservados &copy; Ítalo Decanio 24/09/24</p>
+    </footer>
+    <script>
+        //contador de anotações
+        let contadorNotas = 0;
+
+        
+        const inputNota = document.getElementById('input_nota');
+        const btnAdicionar = document.getElementById('btn_adicionar');
+        const listaNotas = document.getElementById('lista_notas');
+
+        //add nova anotação
+        btnAdicionar.addEventListener('click', function(){
+            const notaTexto = inputNota.value.trim(); //metodo .trim alimina os espaço antes e depois do texto de anotação, para evitar que seja validado uma anotação em branco
+
+            if (notaTexto !== ''){
+                contadorNotas++; //add n nota
+
+                //cria elemnto nova nota
+                const li = document.createElement('li');
+                li.classList.add('nota-item');
+
+                //cria número da anotação
+                const notaNumero = document.createElement('span');
+                notaNumero.classList.add('nota-numero');
+                notaNumero.textContent = contadorNotas + '.' ;
+
+                // cria texto de anotação
+                const notaTextoSpan = document.createElement('span');
+                notaTextoSpan.classList.add('nota-texto');
+                notaTextoSpan.textContent = notaTexto;
+
+                //cria botão excluir
+                const btnExcluir = document.createElement('button');
+                btnExcluir.classList.add('btn-excluir');
+                btnExcluir.textContent = 'Excluir';
+                btnExcluir.addEventListener('click', function(){
+                    listaNotas.removeChild(li); //remove nota da lista
+                    atualizarNumeracao(); //atualiza numeração das anotações
+                });
+
+                //atualiza os elementos dentro do item da lista
+                li.appendChild(notaNumero); 
+                li.appendChild(notaTextoSpan);
+                li.appendChild(btnExcluir);
+
+                //add nova nota a lista
+                listaNotas.appendChild(li);
+
+                //Limpa o campo de entrada após adicionar a nota
+                inputNota.value = '';
+
+            }
+        });
+
+        //atualiza numeração das notas
+        function atualizarNumeracao() {
+            const notas = document.querySelectorAll('.nota-item');
+            contadorNotas = 0;
+            notas.forEach((nota, index) => {
+                contadorNotas++;
+                const numero = nota.querySelector('.nota-numero');
+                numero.textContent = contadorNotas + '.';
+            });
+        }
+
+    </script>
+</body>
+</html>
